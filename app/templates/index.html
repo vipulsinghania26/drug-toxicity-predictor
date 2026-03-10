@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drug Toxicity Predictor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-950 min-h-screen flex items-center justify-center p-6">
+
+    <div class="bg-gray-900 rounded-2xl shadow-2xl p-10 w-full max-w-xl">
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-white">🧪 Drug Toxicity Predictor</h1>
+            <p class="text-gray-400 mt-2">Enter a SMILES string to predict toxicity</p>
+        </div>
+
+        <!-- Input Form -->
+        <form method="post" action="/predict">
+            <label class="text-gray-300 text-sm font-medium">SMILES String</label>
+            <input
+                type="text"
+                name="smiles"
+                placeholder="e.g. CC(=O)Oc1ccccc1C(=O)O"
+                class="w-full mt-2 px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:border-blue-500"
+                required
+            />
+            <button
+                type="submit"
+                class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200"
+            >
+                Predict Toxicity
+            </button>
+        </form>
+
+        <!-- Result -->
+        {% if result %}
+            {% if result.error %}
+                <div class="mt-6 p-4 bg-red-900 border border-red-600 rounded-lg text-red-300">
+                    ❌ {{ result.error }}
+                </div>
+            {% else %}
+                <div class="mt-6 p-6 rounded-xl border
+                    {% if result.toxic %}
+                        bg-red-950 border-red-600
+                    {% else %}
+                        bg-green-950 border-green-600
+                    {% endif %}
+                ">
+                    <p class="text-2xl font-bold text-center
+                        {% if result.toxic %} text-red-400 {% else %} text-green-400 {% endif %}
+                    ">
+                        {{ result.verdict }}
+                    </p>
+                    <p class="text-gray-300 text-center mt-2">
+                        Confidence: <span class="font-semibold text-white">{{ result.confidence }}%</span>
+                    </p>
+                    <p class="text-gray-500 text-center text-sm mt-1">
+                        SMILES: {{ result.smiles }}
+                    </p>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <!-- Test Examples -->
+        <div class="mt-6 text-center">
+            <p class="text-gray-500 text-xs">Try these examples:</p>
+            <p class="text-gray-600 text-xs mt-1">Aspirin: <span class="text-blue-400">CC(=O)Oc1ccccc1C(=O)O</span></p>
+            <p class="text-gray-600 text-xs">Ethanol: <span class="text-blue-400">CCO</span></p>
+        </div>
+    </div>
+
+</body>
+</html>
